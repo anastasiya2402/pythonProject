@@ -50,7 +50,7 @@ def choose_filter(context, link_name):
 
 @step('Verifying that the dress you want is there')
 def verify_dress(context):
-    needed_dress=context.browser.find_element_by_xpath("//li[@class='s-item    '][.//span[text()='Free shipping']][.//span[text()='Free returns']][.//span[text()='Buy 1, get 1 10% off']]//h3")
+    needed_dress=context.browser.find_element_by_xpath("//li[@class='s-item    '][.//span[text()='Free shipping']][.//span[text()='Free returns']][.//span[text()='Buy 1, get 1 10% off']][.//span[text()='Buy It Now']]//h3")
 
 @step('Push button "{link_of_the_element}"')
 def click_the_search_btn(context, link_of_the_element):
