@@ -97,7 +97,9 @@ Feature: Regression for eBay Search Combo box.
 
      Scenario: Click on My eBay
       Given Open eBay.com
-      And Click "My eBay" header element
+      And Hover over "My eBay" header element
+      And and go to "Recently Viewed" items
+
 
      Scenario: Click on Notification
       Given Open eBay.com

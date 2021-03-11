@@ -2,6 +2,7 @@ from behave import step
 from selenium import webdriver
 from time import sleep
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 @step('Navigate to Google')
@@ -89,6 +90,7 @@ def verify_all_categories(context):
 @step('Press Enter/Return in Search "{name_of_the_link}" field')
 def submit_search(context, name_of_the_link):
     srch_combo_box = context.browser.find_element_by_xpath(f"//input[@id='gh-ac' and @role='{name_of_the_link}']")
+    sleep(2)
     srch_combo_box.send_keys(Keys.RETURN)
     sleep(5)
 
@@ -173,5 +175,20 @@ def click_sell(context, name_of_the_link):
     header_action=context.browser.find_element_by_xpath(f"//*[contains(@class, 'gh-') and contains(text(), '{name_of_the_link}')]")
     sleep(5)
     header_action.click()
+
+@step('Hover over "{link_name}" header element')
+def hover_over(context, link_name):
+    action=ActionChains(context.browser)
+    elmt=context.browser.find_element_by_xpath(f"//*[contains(@class, 'gh-') and contains(text(), '{link_name}')]")
+    hover_elmt=action.move_to_element(elmt).perform()
+    sleep(3)
+
+@step('and go to "{name_of_link}" items')
+def choose_elmt(context,name_of_link):
+    choose_next=context.browser.find_element_by_xpath(f"//a[text()=' {name_of_link}']")
+    choose_next.click()
+    sleep(3)
+
+
 
 
