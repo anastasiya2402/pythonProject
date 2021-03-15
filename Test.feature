@@ -233,7 +233,7 @@ Feature: Regression for eBay Search Combo box.
     And Push button "Search"
     Then "All Categories" are displayed
 
-  Scenario: Verifying that combination of special characters (without whitespace) are allowed in Search.(Actual: not allowed)
+  Scenario: Verifying that a certain combination of special characters (without whitespace) are allowed in Search.
    Given Open eBay.com
    And Enter some special characters
    And Push button "Search"

@@ -84,11 +84,6 @@ def search_smth(context):
     search_inpt.send_keys("@!#$%^&*()-_=+`~|]}[{'/.>,<?")
 
 
-@step('Verifying that the iPhone 11 you want is there')
-def enter_search(context):
-    search_elmt=context.browser.find_elements_by_xpath("//li[@class='s-item    '][.//span[text()='Free returns']][.//span[text()='Free shipping']][.//span[text()='Brand New']][.//span[text()='$649.00']]//h3")
-
-
 @step('Select/Copy/Paste the result')
 def copy_text(context):
     element=context.browser.find_element_by_xpath("//input[@id='gh-ac']")
