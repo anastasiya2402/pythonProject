@@ -5,14 +5,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import warnings
 
-
-@step('Navigate to Google')
-def test(context):
-  driver=webdriver.Chrome()
-  driver.get("https://www.google.com/")
-  driver.quit()
-
-
 @step('Open eBay.com')
 def some_test_impl(context):
     context.browser=webdriver.Chrome()
@@ -27,11 +19,15 @@ def search_smth(context, name_of_search):
 
 @step('Search results are "{link}" related')
 def verify_search_result(context, link):
-    item = context.browser.find_elements_by_xpath(f"//h3[contains(text(), '{link}')]")
+    item = context.browser.find_elements_by_xpath(f"//li[contains(@class,'s-item')]//h3[contains(text(), '{link}')]")
     print(item)
 
     if not item:   # True
         raise ValueError(f'BUG!: \n\n Search results are not related to {link} only')
+
+    else:
+        item[0].click()
+        sleep(5)
 
 @step('"{link_name}" are displayed')
 def verify_all_categories(context,link_name):
@@ -58,17 +54,21 @@ def choose_filter(context,link_name):
 @step('and "{name_link}"')
 def filter_again(context,name_link):
    another_filter=context.browser.find_element_by_xpath(f"//span[text()='{name_link}']/span[@class='checkbox']")
-   sleep(2)
+   sleep(4)
    another_filter.click()
 
 
 @step('Verifying that the "{link_name}es" with such filters are there on the first page')
 def verify_dress(context,link_name):
     needed_dress=context.browser.find_elements_by_xpath("//li[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now')]][.//span[contains(text(),'Free shipping')]]//h3[contains(text(),'{link_name}')]")
-    sleep(5)
+    sleep(6)
 
     if not needed_dress:
      raise ValueError(f'BUG: \n\n Not all {link_name}es satisfy filters!')
+
+    else:
+        needed_dress[0].click()
+        sleep(5)
 
 
 @step('Push button "{link_of_the_element}"')
@@ -147,6 +147,13 @@ def all_items(context,name_of_link):
     if not all_items:
         raise ValueError(f'BUG!: \n\n Not all search results are {name_of_link} with specified filters!')
 
+    else:
+        all_items[0].click()
+        sleep(5)
+
+@step('Delete all cookies')
+def clean_cookies(context):
+    context.browser.delete_all_cookies()
 
 
 

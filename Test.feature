@@ -1,9 +1,5 @@
 # Created by anastasiashabanskaya at 3/2/21
 
-# Feature: Hello World
-
-#   Scenario: Test
- #   Given Navigate to Google
 
 Feature: Regression for eBay Search Combo box.
 
@@ -30,7 +26,8 @@ Feature: Regression for eBay Search Combo box.
    Given Open eBay.com
     And In search bar type "dres"
     And Push button "Search"
-     Then Search results are "Dress" related
+    And Search results are "Dress" related
+    Then Delete all cookies
 
   Scenario: Trying to find a dress using filters "Buy It Now" and "Free Shipping"
     Given Open eBay.com
