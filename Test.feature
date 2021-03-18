@@ -7,26 +7,26 @@ Feature: Regression for eBay Search Combo box.
   Given Open eBay.com
   And In search bar type "dress"
   And Push button "Search"
-   Then Search results are "Dress" related
+  Then Search results are "dress" related
 
 
   Scenario: Verifying that typing "dress1" puts it to category "Dresses"
     Given Open eBay.com
     And In search bar type "dress1"
     And Push button "Search"
-    Then Search results are "Dress" related
+    Then Search results are "dress" related
 
   Scenario: Verifying that typing "dress#" puts it to category "Dresses"
     Given Open eBay.com
     And In search bar type "dress#"
     And Push button "Search"
-      Then Search results are "Dress" related
+    Then Search results are "dress" related
 
    Scenario: Verifying autocompletion: typing "dres" puts it to category "Dresses"
-   Given Open eBay.com
+    Given Open eBay.com
     And In search bar type "dres"
     And Push button "Search"
-    And Search results are "Dress" related
+    And Search results are "dress" related
     Then Delete all cookies
 
   Scenario: Trying to find a dress using filters "Buy It Now" and "Free Shipping"
@@ -36,8 +36,46 @@ Feature: Regression for eBay Search Combo box.
     And Choose filter "Buy It Now"
     And Next choose more filters: "Shipping"
     And and "Free Shipping"
-    Then Verifying that the "Dresses" with such filters are there on the first page
+    Then Verifying that all items are "dresses" with filters "Free shipping" and "Buy It Now"
 
+  Scenario: Trying to find an iPhone 11 using filters "New", "Buy It Now" and "Free Shipping"
+    Given Open eBay.com
+    And In search bar type "iphone 11"
+    And Push button "Search"
+    And Choose filter "Buy It Now"
+    And Next choose more filters: "Shipping"
+    And and "Free Shipping"
+    And Next choose more filters: "Condition"
+    And and "New"
+    Then Verifying that all items are "iPhone 11" with filters "Free Shipping", "Brand New" and "Buy It Now"(or Best Offer)
+
+  Scenario Outline: Verifying that items are Search related using Table as a variable
+    Given Open eBay.com
+    And In search bar type "<search_item>"
+    And Push button "Search"
+    And Choose filter "Buy It Now"
+    And Next choose more filters: "Shipping"
+    And and "Free Shipping"
+    Then Verifying that all items are "<search_item>" related
+
+  Examples:
+    | search_item |
+    | dress       |
+    | iphone      |
+    | baby dress  |
+
+  Scenario: Verifying that capacity of "Search" combo box is 300.
+    Given Open eBay.com
+    And In search bar type "iphone 11"
+    And In search bar type "iphone 11"
+    And In search bar type "iphone 11"
+    And In search bar type "iphone 11"
+    And In search bar type "iphone 11"
+    And Select/Copy/Paste the result
+    And  And paste 5 more times(Total 315 characters)
+    And Count # of actual elements in the field and compare with 300
+    Then Push button "Search"
+    Then Verify the message "No exact matches found"
 
   Scenario: Pushing button Search while box is empty displays categories.
     Given Open eBay.com
@@ -235,30 +273,6 @@ Feature: Regression for eBay Search Combo box.
    And Enter some special characters
    And Push button "Search"
    Then "All Categories" are displayed
-
-   Scenario: Verifying that capacity of "Search" combo box is 300.
-     Given Open eBay.com
-     And In search bar type "iphone 11"
-     And In search bar type "iphone 11"
-      And In search bar type "iphone 11"
-      And In search bar type "iphone 11"
-      And In search bar type "iphone 11"
-     And Select/Copy/Paste the result
-    And  And paste 5 more times(Total 315 characters)
-     And Count # of actual elements in the field and compare with 300
-    Then Push button "Search"
-    Then Verify the message "No exact matches found"
-
-  Scenario: Trying to find an iPhone 11 using filters "New", "Buy It Now" and "Free Shipping"
-    Given Open eBay.com
-    And In search bar type "iphone 11"
-    And Push button "Search"
-    And Choose filter "Buy It Now"
-    And Next choose more filters: "Shipping"
-    And and "Free Shipping"
-    And Next choose more filters: "Condition"
-    And and "New"
-    Then Verifying that all items are "iPhone 11" with filters
 
   Scenario: Click on Sell
       Given Open eBay.com
