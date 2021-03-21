@@ -7,8 +7,7 @@ import warnings
 
 @step('Open eBay.com')
 def some_test_impl(context):
-    context.browser=webdriver.Chrome()
-    context.browser.get("https://www.ebay.com/")
+    context.browser.get(context.url)
 
 
 @step('In search bar type "{name_of_search}"')
@@ -26,6 +25,16 @@ def verify_search_result(context, search):
     for each_item in items:  # iterate through results
         if search.lower() not in each_item.text.lower():  # TRUE or FALSE
            mismatches.append(each_item.text)
+           break
+
+    if not items:
+        raise ValueError(f'BUG:\n\n Not all {search}es found by xPath are on the page!')
+
+    items[0].click()
+    sleep(2)
+
+    back_to_search = context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
+    sleep(2)
 
     for page in range(2,10):
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
@@ -34,12 +43,11 @@ def verify_search_result(context, search):
         for each_item in items:
             if search.lower() not in each_item.text.lower():
                 mismatches.append(each_item.text)
-
+                break
     if mismatches:
       print(mismatches)
-      raise ValueError(f'BUG: Some items do not contain the word {search}!')
-    if not items:
-     raise ValueError(f'BUG: Not all {search}es are in the result items!')
+      raise ValueError(f'BUG: \n\n Some items do not contain the word {search}!')
+
 
 @step('Verifying that all items are "{search}" related')
 def verifying_result(context,search):
@@ -49,6 +57,15 @@ def verifying_result(context,search):
          if search.lower() not in each_item.text.lower():
              mismatches.append(each_item.text)
              break
+
+     if not result_items:
+         raise ValueError(f'BUG:\n\n Not all {search} found by xPath are on the page!')
+
+     result_items[0].click()
+     sleep(2)
+     back_to_search = context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
+     sleep(2)
+
      for page in range(2,10):
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
         result_items = context.browser.find_elements_by_xpath("//li[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now')]][.//span[contains(text(),'Free shipping')]]//h3")
@@ -101,6 +118,14 @@ def verify_dress(context, search):
         if search.lower() not in each_item.text.lower():  # TRUE or FALSE
           mismatches.append(each_item.text)
 
+    if not result_items:
+        raise ValueError(f'BUG:\n\n Not all {search}es found by xPath are on the page!')
+
+    result_items[0].click()
+    sleep(2)
+    back_to_search=context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
+    sleep(2)
+
     for page in range(2,10):
          sleep(2)
          context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
@@ -109,11 +134,10 @@ def verify_dress(context, search):
          for each_item in result_items:
             if search.lower() not in each_item.text.lower():  # TRUE or FALSE
              mismatches.append(each_item.text)
+
     if mismatches:
      print(mismatches)
      raise ValueError(f'BUG: \n\n Not all results contain a word {search}!')
-    if not result_items:
-     raise ValueError(f'BUG: Not all {search}es are in the result items!')
 
 
 
@@ -197,6 +221,14 @@ def all_items(context,name_of_link):
       if name_of_link.lower() not in each_item.text.lower():
        mismatches.append(each_item.text)
 
+    if not result_items:
+        raise ValueError(f'BUG:\n\n Not all {name_of_link} found by xPath are on the page!')
+
+    result_items[0].click()
+    sleep(2)
+    back_to_search = context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
+    sleep(2)
+
     for page in range(2, 10):
         sleep(2)
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
@@ -209,14 +241,82 @@ def all_items(context,name_of_link):
     if mismatches:
        print(mismatches)
        raise ValueError(f'BUG: \n\n Not all results contain the word {name_of_link}!')
-    if not result_items:
-     raise ValueError(f'BUG: Not all {name_of_link}es are in the result items!')
 
 
 @step('Delete all cookies')
 def clean_cookies(context):
     context.browser.delete_all_cookies()
 
+@step('From chosen 60 checkbox {name_of_link} starting with Brand, choose filters: "0", "5", "6", "16"')
+def filters_checkboxes(context,name_of_link):
+    checkboxes=context.browser.find_elements_by_xpath("//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg']")
+    count_number=len(checkboxes)
+    print(count_number)
+
+    if not checkboxes:
+     raise ValueError(f'BUG:\n\n Not all {name_of_link} found by xPath are on the page!')
+
+    checkboxes[0].click()
+    sleep(4)
+    checkboxes = context.browser.find_elements_by_xpath("//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg']")
+    checkboxes[5].click()
+    sleep(3)
+    checkboxes = context.browser.find_elements_by_xpath("//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg']")
+    checkboxes[6].click()
+    sleep(3)
+    checkboxes = context.browser.find_elements_by_xpath("//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg']")
+    sleep(3)
+    context.browser.execute_script("window.scrollTo(0,700);")
+    sleep(1)
+    checkboxes[16].click()
+    context.browser.execute_script("window.scrollTo(0,700);")
+    sleep(3)
 
 
+@step('Then choose more filters: "{name_of_filter}"')
+def filter_adding_text(context,name_of_filter):
+    context.browser.execute_script("window.scrollTo(0,1800);")
+    sleep(4)
+    context.browser.find_element_by_xpath(f"//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg'][.//span[text()='{name_of_filter}']]").click()
+    sleep(3)
+    context.browser.execute_script("window.scrollTo(0,1800);")
+    sleep(4)
+
+@step('and also "{link_name}"')
+def filter_by_text(context, link_name):
+    context.browser.execute_script("window.scrollTo(0,2400);")
+    sleep(4)
+    context.browser.find_element_by_xpath(f"//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg'][.//span[text()='{link_name}']]").click()
+    sleep(3)
+    context.browser.execute_script("window.scrollTo(0,2400);")
+    sleep(3)
+
+@step('Verifying that all items are "{search}" related and contain "{common_filter}"')
+def let_us_find(context,search,common_filter):
+    common_paths=context.browser.find_elements_by_xpath(f"//li[starts-with(@class,'s-item')][.//span[text()='Free 4 day shipping' or text()='{common_filter}']]")
+    mismatches = []  # placeholder for bugs
+
+    for each_item in common_paths:  # iterate through results
+        if search.lower() not in each_item.text.lower():  # TRUE or FALSE
+            mismatches.append(each_item.text)
+
+    if not common_paths:
+       raise ValueError(f'BUG:\n\n Not all {search} results found by xPath are on the page!')
+
+    common_paths[0].click()
+    sleep(2)
+    back_to_search = context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
+    sleep(2)
+
+    for page in range(2, 10):
+        context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
+        common_paths=context.browser.find_elements_by_xpath(f"//li[starts-with(@class,'s-item')][.//span[text()='Free 4 day shipping' or text()='{common_filter}']]")
+        sleep(5)
+        for each_item in common_paths:
+            if search.lower() not in each_item.text.lower():
+                mismatches.append(each_item.text)
+
+    if mismatches:
+        print(mismatches)
+        raise ValueError(f'BUG: \n\n Some items do not contain the word {search}!')
 

@@ -64,6 +64,17 @@ Feature: Regression for eBay Search Combo box.
     | iphone      |
     | baby dress  |
 
+
+  Scenario: Verifying that filters work
+    Given Open eBay.com
+    And In search bar type "shoes"
+    And Push button "Search"
+    And From chosen 60 checkbox filters starting with Brand, choose filters: "0", "5", "6", "16"
+    And Then choose more filters: "New with tags"
+    And and also "Free Shipping"
+   Then Verifying that all items are "shoes" related and contain "Free shipping"
+
+
   Scenario: Verifying that capacity of "Search" combo box is 300.
     Given Open eBay.com
     And In search bar type "iphone 11"
