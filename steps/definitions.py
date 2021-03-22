@@ -36,7 +36,11 @@ def verify_search_result(context, search):
         if search.lower() not in each_item.text.lower():
            mismatches.append(each_item.text)
 
-    for page in range(2,10):
+    pages = context.browser.find_elements_by_xpath("//a[@class='pagination__item']")
+    count_number = len(pages)
+    print(count_number)
+    top_value = count_number + 1
+    for page in range(2,top_value):
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
         items = context.browser.find_elements_by_xpath("//li[contains(@class,'s-item')]//h3")
         sleep(5)
@@ -69,7 +73,11 @@ def verifying_result(context,search):
              mismatches.append(each_item.text)
              break
 
-     for page in range(2,10):
+     pages = context.browser.find_elements_by_xpath("//a[@class='pagination__item']")
+     count_number = len(pages)
+     print(count_number)
+     top_value = count_number + 1
+     for page in range(2,top_value):
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
         result_items = context.browser.find_elements_by_xpath("//li[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now')]][.//span[contains(text(),'Free shipping')]]//h3")
         sleep(5)
@@ -84,7 +92,6 @@ def verifying_result(context,search):
      if mismatches:
       print(mismatches)
       raise ValueError(f'BUG: Some items do not contain the word {search}!')
-
 
 
 @step('"{link_name}" are displayed')
@@ -133,7 +140,11 @@ def verify_dress(context, search):
         if search.lower() not in each_item.text.lower():
           mismatches.append(each_item.text)
 
-    for page in range(2,10):
+    pages = context.browser.find_elements_by_xpath("//a[@class='pagination__item']")
+    count_number = len(pages)
+    print(count_number)
+    top_value = count_number + 1
+    for page in range(2,top_value):
          sleep(2)
          context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
          result_items = context.browser.find_elements_by_xpath("//li[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now')]][.//span[contains(text(),'Free shipping')]]//h3")
@@ -235,7 +246,11 @@ def all_items(context,name_of_link):
       if name_of_link.lower() not in each_item.text.lower():
        mismatches.append(each_item.text)
 
-    for page in range(2, 10):
+    pages = context.browser.find_elements_by_xpath("//a[@class='pagination__item']")
+    count_number = len(pages)
+    print(count_number)
+    top_value = count_number + 1
+    for page in range(2, top_value):
         sleep(2)
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
         result_items=context.browser.find_elements_by_xpath("//div[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now') or contains(text(),'or Best Offer')]][.//span[text()='Free shipping']][.//span[text()='Brand New']]//h3")
@@ -319,6 +334,15 @@ def filter_adding_text(context,name_of_filter):
     context.browser.execute_script("window.scrollTo(0,1800);")
     sleep(4)
 
+@step('Choose more filters: "{filter_name}"')
+def filter_adding_location(context,filter_name):
+    context.browser.execute_script("window.scrollTo(0,1400);")
+    sleep(4)
+    context.browser.find_element_by_xpath(f"//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg'][.//span[text()='{filter_name}']]").click()
+    sleep(3)
+    context.browser.execute_script("window.scrollTo(0,1400);")
+    sleep(4)
+
 @step('and also "{link_name}"')
 def filter_by_text(context, link_name):
     context.browser.execute_script("window.scrollTo(0,2400);")
@@ -326,6 +350,15 @@ def filter_by_text(context, link_name):
     context.browser.find_element_by_xpath(f"//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg'][.//span[text()='{link_name}']]").click()
     sleep(3)
     context.browser.execute_script("window.scrollTo(0,2400);")
+    sleep(3)
+
+@step('and also choose "{link_filter}"')
+def filter_with_location(context,link_filter):
+    context.browser.execute_script("window.scrollTo(0,2000);")
+    sleep(4)
+    context.browser.find_element_by_xpath(f"//span[@class='checkbox cbx x-refine__multi-select-checkbox ']/parent::div[@class='x-refine__select__svg'][.//span[text()='{link_filter}']]").click()
+    sleep(3)
+    context.browser.execute_script("window.scrollTo(0,2000);")
     sleep(3)
 
 @step('Verifying that all items are "{search}" related and contain "{common_filter}"')
@@ -345,7 +378,11 @@ def let_us_find(context,search,common_filter):
         if search.lower() not in each_item.text.lower():  # TRUE or FALSE
             mismatches.append(each_item.text)
 
-    for page in range(2, 10):
+    pages=context.browser.find_elements_by_xpath("//a[@class='pagination__item']")
+    count_number=len(pages)
+    print(count_number)
+    top_value=count_number+1
+    for page in range(2, top_value):
         context.browser.find_element_by_xpath(f"//a[@class='pagination__item' and text()='{page}']").click()
         common_paths=context.browser.find_elements_by_xpath(f"//li[starts-with(@class,'s-item')][.//span[text()='Free 4 day shipping' or text()='{common_filter}']]")
         sleep(5)
@@ -380,6 +417,13 @@ def color_filter(context,color_choice):
     sleep(2)
     color_option.click()
 
+@step('From Color options, choose {color_option}')
+def color_another_construction(context,color_option):
+    context.browser.execute_script("window.scrollTo(0,300);")
+    color_option = context.browser.find_element_by_xpath("//span[text()='Pink']/parent::a")
+    sleep(2)
+    color_option.click()
+
 @step('In {expand_it} click on {see_all}')
 def choose_brand(context,expand_it, see_all):
     context.browser.execute_script("window.scrollTo(0,1400);")
@@ -404,3 +448,8 @@ def pushing_button_hidden_before(context,link_button):
     sleep(3)
     button_push.click()
     sleep(4)
+
+@step('Text as a variable')
+def text_as_a_variable(context):
+    my_variable=context.text
+    print(my_variable)

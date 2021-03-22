@@ -72,10 +72,10 @@ Feature: Regression for eBay Search Combo box.
     And From chosen 60 checkbox filters starting with Brand, choose filters: "0", "5", "6", "16"
     And Then choose more filters: "New with tags"
     And and also "Free Shipping"
-   Then Verifying that all items are "shoes" related and contain "Free shipping"
+    Then Verifying that all items are "shoes" related and contain "Free shipping"
 
 
-   Scenario: Verifying that filters work: picking them manually
+   Scenario: Verifying that filters work: finding a pair for myself
     Given Open eBay.com
     And In search bar type "shoes"
     And Push button "Search"
@@ -86,6 +86,21 @@ Feature: Regression for eBay Search Combo box.
     And In New Window choose Not Specified
     Then Push Apply button
     Then Search results are "shoes" related
+
+    Scenario: Verifying that filters work: finding a pair of skechers for myself
+    Given Text as a variable
+      """
+      Verifying that all items are "skechers" related and contain "Free shipping"
+
+      """
+    And Open eBay.com
+    And In search bar type "skechers"
+    And Push button "Search"
+    And Choose size 8.5
+    And From Color options, choose Pink
+    And Choose more filters: "New with tags"
+    And and also choose "Free Shipping"
+    And Verifying that all items are "skechers" related and contain "Free shipping"
 
 
   Scenario: Verifying that capacity of "Search" combo box is 300.
