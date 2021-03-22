@@ -26,8 +26,8 @@ Feature: Regression for eBay Search Combo box.
     Given Open eBay.com
     And In search bar type "dres"
     And Push button "Search"
-    And Search results are "dress" related
-    Then Delete all cookies
+    Then Search results are "dress" related
+ #   Then Delete all cookies
 
   Scenario: Trying to find a dress using filters "Buy It Now" and "Free Shipping"
     Given Open eBay.com
@@ -73,6 +73,19 @@ Feature: Regression for eBay Search Combo box.
     And Then choose more filters: "New with tags"
     And and also "Free Shipping"
    Then Verifying that all items are "shoes" related and contain "Free shipping"
+
+
+   Scenario: Verifying that filters work: picking them manually
+    Given Open eBay.com
+    And In search bar type "shoes"
+    And Push button "Search"
+    And Click on Women
+    And Choose size 8.5
+    And From Color, choose White
+    And In Brand click on see all
+    And In New Window choose Not Specified
+    Then Push Apply button
+    Then Search results are "shoes" related
 
 
   Scenario: Verifying that capacity of "Search" combo box is 300.
