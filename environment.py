@@ -21,6 +21,6 @@ def after_step(context,step):
 
 
 def after_scenario(context,scenario):
-#    context.browser.delete_all_cookies()
+    context.browser.delete_all_cookies()
     context.browser.close()
     context.browser.quit()

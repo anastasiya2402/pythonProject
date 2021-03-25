@@ -19,12 +19,12 @@ def search_smth(context, name_of_search):
 @step('Search results are "{search}" related')
 def verify_search_result(context, search):
     items = context.browser.find_elements_by_xpath("//li[starts-with(@class,'s-item')]//h3")
-    sleep(3)
+    sleep(5)
     if not items:
         raise ValueError(f'BUG:\n\n Not all {search}es found by xPaths are on the page!')
 
     items[0].click()
-    sleep(2)
+    sleep(3)
 
     back_to_search = context.browser.find_element_by_xpath("//span[@class='gspr vi-bkto-arrnewred']").click()
     sleep(2)
@@ -440,8 +440,14 @@ def filters_from_table(context):
         clicks_size=filter['size']
         clicks_color=filter['color']
 
-        desired_checkbox=context.browser.find_element_by_xpath(f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@class='x-refine__select__svg'][.//span[text()='{checks_label}']]//input")
+        desired_group=context.browser.find_element_by_xpath(f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@role='button']")
         sleep(5)
+        if desired_group.get_attribute('aria-expanded') == 'false':
+            desired_group.click()
+            sleep(4)
+
+        desired_checkbox=context.browser.find_element_by_xpath(f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@class='x-refine__select__svg'][.//span[contains(text(),'{checks_label}')]]//input")
+        sleep(3)
         special_char=f"//li[@class='x-refine__main__list '][.//h3[text()=\'Let's\']]"
 
         if not desired_checkbox:
@@ -450,23 +456,19 @@ def filters_from_table(context):
         desired_checkbox.click()
         sleep(3)
 
-        desired_size = context.browser.find_element_by_xpath(f"//a[@class='size-component__square' and text()='{clicks_size}']")
-        sleep(5)
+        try:
+            desired_size = context.browser.find_element_by_xpath(f"//a[@class='size-component__square' and text()='{clicks_size}']")
+            sleep(5)
+            desired_size.click()
+        except:
+            warnings.warn(f'BUG:\n\n Checkbox with name {clicks_size} not found!')
 
-        if not desired_size:
-            raise ValueError('BUG:\n\n Checkbox not found!')
-
-        desired_size.click()
-        sleep(5)
-
-        desired_color = context.browser.find_element_by_xpath(f"//span[@class='clipped' and text()='{clicks_color}']/parent::a")
-        sleep(5)
-
-        if not desired_color:
-            raise ValueError('BUG:\n\n Checkbox not found!')
-
-        desired_color.click()
-        sleep(5)
+        try:
+            desired_color = context.browser.find_element_by_xpath(f"//span[@class='clipped' and text()='{clicks_color}']/parent::a")
+            sleep(5)
+            desired_color.click()
+        except:
+            warnings.warn(f'BUG:\n\n Checkbox with name {clicks_color} not found!')
 
 
 @step('Apply the following filters')
@@ -475,16 +477,31 @@ def filters_from_table(context):
         header = filter['Items']
         checks_label = filter['value']
 
-
-        desired_checkbox=context.browser.find_element_by_xpath(f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@class='x-refine__select__svg'][.//span[contains(text(),'{checks_label}')]]//input")
-        sleep(5)
-        special_char=f"//li[@class='x-refine__main__list '][.//h3[text()=\'Let's\']]"
-
-        if not desired_checkbox:
-            raise ValueError('BUG:\n\n Checkbox not found!')
-
-        sleep(2)
-        desired_checkbox.click()
+        desired_group = context.browser.find_element_by_xpath(
+            f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@role='button']")
         sleep(5)
 
+        if desired_group.get_attribute('aria-expanded') == 'false':
+            desired_group.click()
+            sleep(4)
+
+        try:
+            desired_checkbox=context.browser.find_element_by_xpath(f"//li[@class='x-refine__main__list '][.//h3[text()='{header}']]//div[@class='x-refine__select__svg'][.//span[starts-with(text(),'{checks_label}')]]//input")
+            sleep(5)
+            special_char=f"//li[@class='x-refine__main__list '][.//h3[text()=\'Let's\']]"
+            desired_checkbox.click()
+            sleep(3)
+        except:
+            see_all_choice = context.browser.find_element_by_xpath(f"//span[text()='see all']/parent::button[starts-with(@aria-label,'see all - {header} - opens dialog')]")
+            sleep(5)
+            see_all_choice.click()
+            sleep(3)
+            new_window_choice = context.browser.find_element_by_xpath(f"//span[@class='cbx x-refine__multi-select-cbx' and text()='{checks_label}']")
+            sleep(3)
+            new_window_choice.click()
+            sleep(5)
+            button_push = context.browser.find_element_by_xpath("//span[@aria-hidden='true' and text()='Apply']")
+            sleep(3)
+            button_push.click()
+            sleep(4)
 

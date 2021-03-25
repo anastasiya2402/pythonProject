@@ -38,6 +38,7 @@ Feature: Regression for eBay Search Combo box.
     And and "Free Shipping"
     Then Verifying that all items are "dress" related
 
+
   Scenario: Trying to find an iPhone 11 using filters "New", "Buy It Now" and "Free Shipping"
     Given Open eBay.com
     And In search bar type "iphone 11"
@@ -50,7 +51,6 @@ Feature: Regression for eBay Search Combo box.
     Then Verifying that all items are "iPhone 11" with above filters
 
 
-
   Scenario Outline: Filtering men items
     Given Open eBay.com
     And In search bar type "<search_item>"
@@ -60,17 +60,17 @@ Feature: Regression for eBay Search Combo box.
     | Filter        |  value         | size          | color          |
     | <filter_name> | <filter_value> | <filter_size> | <filter_color> |
 
-   Examples: Shoes
+   Examples: Men shoes
     | search_item | filter_name    | filter_value   | filter_size  | filter_color  |
     | shoes       | Brand          | adidas         |  8.5         | White         |
     | shoes       | Upper Material | Leather        |  9           | Red           |
     | shoes       | Features       | Comfort        |  9.5         | Black         |
-    | shoes       | Condition      | New with tags  |  10          | Gray          |
+    | shoes       | Pattern        | Solid          |  10          | Gray          |
 
     Then Search results are "<search_item>" related
 
 
-   Scenario Outline: Filtering female items
+   Scenario Outline: Filtering checkbox&radio buttons related items
     Given Open eBay.com
     And In search bar type "<search_item>"
     And Push button "Search"
@@ -92,6 +92,10 @@ Feature: Regression for eBay Search Combo box.
     | necklace      | Color          | Yellow        | Metal         | Yellow Gold Filled     |
     | seiko         | Department     | Women         | Movement      | Mechanical (Automatic) |
 
+   Examples: Dog related items
+    | search_item   | filter_name1   | filter_value1 | filter_name2  | filter_value2  |
+    | dog supplies  | Dog Size       | XS            | Type          | Hoodie         |
+    | dog supplies  | Material       | Cotton        | Dog Breed     | Maltese        |
 
     Then Search results are "<search_item>" related
 
