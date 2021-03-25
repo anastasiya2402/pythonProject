@@ -3,17 +3,24 @@ import re
 from time import sleep
 
 
-def before_scenario(context, scenario):
-    context.browser = webdriver.Chrome()
-    context.browser.maximize_window()
-    sleep(2)
-
-
 def before_all(context):
     context.url='https://www.ebay.com/'
 
 
+def before_scenario(context, scenario):
+    context.browser = webdriver.Chrome()
+    context.browser.maximize_window()
+ #   context.browser.add_cookie({'name': 'ebay', 'value': '%5Esbf%3D%23%5E'})
+
+
 def after_step(context,step):
-    if step.status=='failed':
-        step_name =re.sub('[^a-zA-Z \n\.]', '', step.name)
-        context.browser.save_screenshot(step_name)
+    if step.status == 'failed':
+        step_name = re.sub('[^a-zA-Z \n\.]', '', step.name)
+        print(step.name)
+        context.browser.save_screenshot(f'{step_name}.png')
+
+
+def after_scenario(context,scenario):
+#    context.browser.delete_all_cookies()
+    context.browser.close()
+    context.browser.quit()

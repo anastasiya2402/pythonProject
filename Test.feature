@@ -3,31 +3,31 @@
 
 Feature: Regression for eBay Search Combo box.
 
-  Scenario: Verify that search displays right items
-  Given Open eBay.com
-  And In search bar type "dress"
-  And Push button "Search"
-  Then Search results are "dress" related
+#  Scenario: Verify that search displays right items
+#  Given Open eBay.com
+#  And In search bar type "dress"
+#  And Push button "Search"
+#  Then Search results are "dress" related
 
 
-  Scenario: Verifying that typing "dress1" puts it to category "Dresses"
-    Given Open eBay.com
-    And In search bar type "dress1"
-    And Push button "Search"
-    Then Search results are "dress" related
-
-  Scenario: Verifying that typing "dress#" puts it to category "Dresses"
-    Given Open eBay.com
-    And In search bar type "dress#"
-    And Push button "Search"
-    Then Search results are "dress" related
-
-   Scenario: Verifying autocompletion: typing "dres" puts it to category "Dresses"
-    Given Open eBay.com
-    And In search bar type "dres"
-    And Push button "Search"
-    Then Search results are "dress" related
- #   Then Delete all cookies
+#  Scenario: Verifying that typing "dress1" puts it to category "Dresses"
+#    Given Open eBay.com
+#    And In search bar type "dress1"
+#    And Push button "Search"
+#    Then Search results are "dress" related
+#
+#  Scenario: Verifying that typing "dress#" puts it to category "Dresses"
+#    Given Open eBay.com
+#    And In search bar type "dress#"
+#    And Push button "Search"
+#    Then Search results are "dress" related
+#
+#   Scenario: Verifying autocompletion: typing "dres" puts it to category "Dresses"
+#    Given Open eBay.com
+#    And In search bar type "dres"
+#    And Push button "Search"
+#    Then Search results are "dress" related
+#
 
   Scenario: Trying to find a dress using filters "Buy It Now" and "Free Shipping"
     Given Open eBay.com
@@ -36,7 +36,7 @@ Feature: Regression for eBay Search Combo box.
     And Choose filter "Buy It Now"
     And Next choose more filters: "Shipping"
     And and "Free Shipping"
-    Then Verifying that all items are "dresses" with filters "Free shipping" and "Buy It Now"
+    Then Verifying that all items are "dress" related
 
   Scenario: Trying to find an iPhone 11 using filters "New", "Buy It Now" and "Free Shipping"
     Given Open eBay.com
@@ -47,22 +47,53 @@ Feature: Regression for eBay Search Combo box.
     And and "Free Shipping"
     And Next choose more filters: "Condition"
     And and "New"
-    Then Verifying that all items are "iPhone 11" with filters "Free Shipping", "Brand New" and "Buy It Now"(or Best Offer)
+    Then Verifying that all items are "iPhone 11" with above filters
 
-  Scenario Outline: Verifying that items are Search related using Table as a variable
+
+
+  Scenario Outline: Filtering men items
     Given Open eBay.com
     And In search bar type "<search_item>"
     And Push button "Search"
-    And Choose filter "Buy It Now"
-    And Next choose more filters: "Shipping"
-    And and "Free Shipping"
-    Then Verifying that all items are "<search_item>" related
+    Then Apply following filters
 
-  Examples:
-    | search_item |
-    | dress       |
-    | iphone      |
-    | baby dress  |
+    | Filter        |  value         | size          | color          |
+    | <filter_name> | <filter_value> | <filter_size> | <filter_color> |
+
+   Examples: Shoes
+    | search_item | filter_name    | filter_value   | filter_size  | filter_color  |
+    | shoes       | Brand          | adidas         |  8.5         | White         |
+    | shoes       | Upper Material | Leather        |  9           | Red           |
+    | shoes       | Features       | Comfort        |  9.5         | Black         |
+    | shoes       | Condition      | New with tags  |  10          | Gray          |
+
+    Then Search results are "<search_item>" related
+
+
+   Scenario Outline: Filtering female items
+    Given Open eBay.com
+    And In search bar type "<search_item>"
+    And Push button "Search"
+    Then Apply the following filters
+
+    | Items          |  value           |
+    | <filter_name1> | <filter_value1>  |
+    | <filter_name2> | <filter_value2>  |
+
+   Examples: Dress and shoe related
+    | search_item | filter_name1    | filter_value1  | filter_name2  | filter_value2 |
+    | baby dress  | Brand          | Disney        | Color           | Pink          |
+    | pumps       | Upper Material | Leather       | Heel Height     | Low           |
+    | skechers    | Occasion       | Casual        | Upper Material  | Suede         |
+
+   Examples: Jewelries
+    | search_item   | filter_name1   | filter_value1 | filter_name2  | filter_value2          |
+    | stud earrings | Item Location  | North America | Color         | Pink                   |
+    | necklace      | Color          | Yellow        | Metal         | Yellow Gold Filled     |
+    | seiko         | Department     | Women         | Movement      | Mechanical (Automatic) |
+
+
+    Then Search results are "<search_item>" related
 
 
   Scenario: Verifying that filters work
@@ -87,6 +118,7 @@ Feature: Regression for eBay Search Combo box.
     Then Push Apply button
     Then Search results are "shoes" related
 
+
     Scenario: Verifying that filters work: finding a pair of skechers for myself
     Given Text as a variable
       """
@@ -103,229 +135,229 @@ Feature: Regression for eBay Search Combo box.
     And Verifying that all items are "skechers" related and contain "Free shipping"
 
 
-  Scenario: Verifying that capacity of "Search" combo box is 300.
-    Given Open eBay.com
-    And In search bar type "iphone 11"
-    And In search bar type "iphone 11"
-    And In search bar type "iphone 11"
-    And In search bar type "iphone 11"
-    And In search bar type "iphone 11"
-    And Select/Copy/Paste the result
-    And  And paste 5 more times(Total 315 characters)
-    And Count # of actual elements in the field and compare with 300
-    Then Push button "Search"
-    Then Verify the message "No exact matches found"
-
-  Scenario: Pushing button Search while box is empty displays categories.
-    Given Open eBay.com
-    And Push button "Search"
-     Then "All Categories" are displayed
-
-  Scenario: Verifying that a whitespace is allowed in Search
-   Given Open eBay.com
-    And In search bar type " "
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "`" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "`"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "~" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "~"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-   Scenario: Verifying that a special character "!" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "!"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "@" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "@"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "#" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "#"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "$" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "$"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "%" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "%"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "^" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "^"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "&" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "&"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "*" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "*"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "(" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "("
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character ")" is allowed in Search
-   Given Open eBay.com
-    And In search bar type ")"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "-" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "-"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "_" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "_"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "+" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "+"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "=" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "="
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "\" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "\"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "}" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "}"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "]" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "]"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "[" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "["
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "'" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "'"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character " is allowed in Search
-   Given Open eBay.com
-    And In search bar type """
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character ":" is allowed in Search
-   Given Open eBay.com
-    And In search bar type ":"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character ";" is allowed in Search
-   Given Open eBay.com
-    And In search bar type ";"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "/" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "/"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "?" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "?"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "." is allowed in Search
-   Given Open eBay.com
-    And In search bar type "."
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character ">" is allowed in Search
-   Given Open eBay.com
-    And In search bar type ">"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "," is allowed in Search
-   Given Open eBay.com
-    And In search bar type ","
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a special character "<" is allowed in Search
-   Given Open eBay.com
-    And In search bar type "<"
-    And Push button "Search"
-    Then "All Categories" are displayed
-
-  Scenario: Verifying that a certain combination of special characters (without whitespace) are allowed in Search.
-   Given Open eBay.com
-   And Enter some special characters
-   And Push button "Search"
-   Then "All Categories" are displayed
-
-  Scenario: Click on Sell
-      Given Open eBay.com
-      And Click "Sell" header element
-
-     Scenario: Click on My eBay
-      Given Open eBay.com
-      And Hover over "My eBay" header element
-      And and go to "Recently Viewed" items
-
-
-     Scenario: Click on Notification
-      Given Open eBay.com
-      And Click "Notification" header element
+#  Scenario: Verifying that capacity of "Search" combo box is 300.
+#    Given Open eBay.com
+#    And In search bar type "iphone 11"
+#    And In search bar type "iphone 11"
+#    And In search bar type "iphone 11"
+#    And In search bar type "iphone 11"
+#    And In search bar type "iphone 11"
+#    And Select/Copy/Paste the result
+#    And  And paste 5 more times(Total 315 characters)
+#    And Count # of actual elements in the field and compare with 300
+#    Then Push button "Search"
+#    Then Verify the message "No exact matches found"
+#
+#  Scenario: Pushing button Search while box is empty displays categories.
+#    Given Open eBay.com
+#    And Push button "Search"
+#     Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a whitespace is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type " "
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "`" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "`"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "~" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "~"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#   Scenario: Verifying that a special character "!" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "!"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "@" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "@"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "#" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "#"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "$" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "$"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "%" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "%"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "^" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "^"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "&" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "&"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "*" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "*"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "(" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "("
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character ")" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type ")"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "-" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "-"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "_" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "_"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "+" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "+"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "=" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "="
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "\" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "\"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "}" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "}"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "]" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "]"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "[" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "["
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "'" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "'"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character " is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type """
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character ":" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type ":"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character ";" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type ";"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "/" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "/"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "?" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "?"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "." is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "."
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character ">" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type ">"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "," is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type ","
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a special character "<" is allowed in Search
+#   Given Open eBay.com
+#    And In search bar type "<"
+#    And Push button "Search"
+#    Then "All Categories" are displayed
+#
+#  Scenario: Verifying that a certain combination of special characters (without whitespace) are allowed in Search.
+#   Given Open eBay.com
+#   And Enter some special characters
+#   And Push button "Search"
+#   Then "All Categories" are displayed
+#
+#  Scenario: Click on Sell
+#      Given Open eBay.com
+#      And Click "Sell" header element
+#
+#     Scenario: Click on My eBay
+#      Given Open eBay.com
+#      And Hover over "My eBay" header element
+#      And and go to "Recently Viewed" items
+#
+#
+#     Scenario: Click on Notification
+#      Given Open eBay.com
+#      And Click "Notification" header element
 
 
 
