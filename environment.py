@@ -10,6 +10,7 @@ def before_all(context):
 def before_scenario(context, scenario):
     context.browser = webdriver.Chrome()
     context.browser.maximize_window()
+    context.browser.delete_all_cookies()
  #   context.browser.add_cookie({'name': 'ebay', 'value': '%5Esbf%3D%23%5E'})
 
 
@@ -21,6 +22,5 @@ def after_step(context,step):
 
 
 def after_scenario(context,scenario):
-    context.browser.delete_all_cookies()
-    # context.browser.close()
-    # context.browser.quit()
+     context.browser.close()
+     context.browser.quit()

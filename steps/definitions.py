@@ -83,8 +83,8 @@ def verify_search_result(context, search):
 
 @step('Verifying that all items are "{search}" related')
 def verifying_result(context,search):
-     result_items_visible=WebDriverWait(context.browser,8).until(EC.presence_of_all_elements_located((By.XPATH,
-     "//li[contains(@class,'s-item')][.//span[text()='Buy It Now' or text()='or Best Offer']][.//span[contains(text(),'Free shipping')]]//h3")),
+     result_items_visible=WebDriverWait(context.browser,10).until(EC.presence_of_all_elements_located((By.XPATH,
+      "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]]//h3")),
      message='Search has not been found')
 
      if not result_items_visible:
@@ -94,8 +94,8 @@ def verifying_result(context,search):
 
      context.browser.back()
 
-     result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-     "//li[contains(@class,'s-item')][.//span[text()='Buy It Now' or text()='or Best Offer']][.//span[contains(text(),'Free shipping')]]//h3")),
+     result_items_visible = WebDriverWait(context.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,
+     "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]]//h3")),
      message='Search has not been found')
 
      mismatches=[]
@@ -106,7 +106,7 @@ def verifying_result(context,search):
                  mismatches.append(each_item.text)
                  break
 
-     pages = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
+     pages = WebDriverWait(context.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,
      "//a[@class='pagination__item']")), message='Search has not been found')
 
      count_number = len(pages)
@@ -118,8 +118,8 @@ def verifying_result(context,search):
          new_page = WebDriverWait(context.browser, 8).until(EC.element_to_be_clickable((By.XPATH,
          f"//a[@class='pagination__item' and text()='{page}']")), message='Search has not been found').click()
 
-         result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-         "//li[contains(@class,'s-item')][.//span[text()='Buy It Now' or text()='or Best Offer']][.//span[contains(text(),'Free shipping')]]//h3")),
+         result_items_visible = WebDriverWait(context.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,
+         "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]]//h3")),
          message='Search has not been found')
 
          if not result_items_visible:
@@ -159,7 +159,7 @@ def choose_filter(context,link_name):
 
 @step('and "{name_link}"')
 def filter_again(context,name_link):
-   another_filter=WebDriverWait(context.browser,5).until(EC.element_to_be_clickable((By.XPATH,
+   another_filter=WebDriverWait(context.browser,8).until(EC.element_to_be_clickable((By.XPATH,
    f"//span[text()='{name_link}']/span[@class='checkbox']")),message='Search has not been found')
 
    another_filter.click()
@@ -250,7 +250,7 @@ def choose_elmt(context,name_of_link):
 @step('Verifying that all items are "{name_of_link}" with above filters')
 def all_items(context,name_of_link):
     result_items_visible=WebDriverWait(context.browser,8).until(EC.presence_of_all_elements_located((By.XPATH,
-    "//div[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now') or contains(text(),'or Best Offer')]][.//span[text()='Free shipping']][.//span[text()='Brand New']]//h3")),
+    "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]][.//span[text()='Brand New']]//h3")),
     message='Search has not been found')
 
     if not result_items_visible:
@@ -261,7 +261,7 @@ def all_items(context,name_of_link):
     context.browser.back()
 
     result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-    "//div[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now') or contains(text(),'or Best Offer')]][.//span[text()='Free shipping']][.//span[text()='Brand New']]//h3")),
+    "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]][.//span[text()='Brand New']]//h3")),
     message='Search has not been found')
 
     mismatches = []
@@ -283,7 +283,7 @@ def all_items(context,name_of_link):
         f"//a[@class='pagination__item' and text()='{page}']")) , message='Search has not been found').click()
 
         result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-        "//div[contains(@class,'s-item')][.//span[contains(text(),'Buy It Now') or contains(text(),'or Best Offer')]][.//span[text()='Free shipping']][.//span[text()='Brand New']]//h3")),
+        "//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'Buy It Now') or contains(text(),'Best Offer')]][.//span[contains(text(),'shipping')]][.//span[text()='Brand New']]//h3")),
         message='Search has not been found')
 
         if not result_items_visible:
@@ -300,11 +300,11 @@ def all_items(context,name_of_link):
        raise ValueError(f'BUG: \n\n Not all results contain the word {name_of_link}!')
 
 
-@step('Verifying that all items are "{search}" related and contain "{common_filter}"')
+@step('Verifying that all items are "{search}" related and contain Free {common_filter}')
 def let_us_find(context,search,common_filter):
 
     result_items=WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-    f"//li[starts-with(@class,'s-item')][.//span[text()='{common_filter}' or text()='Free 4 day shipping']]")),
+    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
     message = 'Search has not been found')
 
     if not result_items:
@@ -315,7 +315,7 @@ def let_us_find(context,search,common_filter):
     context.browser.back()
 
     result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
-    f"//li[starts-with(@class,'s-item')][.//span[text()='Free 4 day shipping' or text()='{common_filter}']]")),
+    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
     message='Search has not been found')
 
     mismatches = []
@@ -342,7 +342,7 @@ def let_us_find(context,search,common_filter):
 
             try:
                 result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
-                f"//li[starts-with(@class,'s-item')][.//span[text()='Free 4 day shipping' or text()='{common_filter}']]")),
+                f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
                 message='Search has not been found')
                 for each_item in result_items:
                     for word in each_item.text:

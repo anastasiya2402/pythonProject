@@ -123,7 +123,7 @@ Feature: Regression testing for eBay.
     And Choose Size 9
     And In Condition choose New with tags
     And In Shipping Options choose Free Shipping
-    And Verifying that all items are "skechers" related and contain "Free shipping"
+    And Verifying that all items are "skechers" related and contain Free shipping
 
 
   Scenario: Verifying that capacity of "Search" combo box is 300.
