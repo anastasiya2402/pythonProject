@@ -7,8 +7,10 @@ def before_all(context):
     context.url='https://www.ebay.com/'
 
 
+
 def before_scenario(context, scenario):
     context.browser = webdriver.Chrome()
+    context.browser.implicitly_wait(5)
     context.browser.maximize_window()
     context.browser.delete_all_cookies()
  #   context.browser.add_cookie({'name': 'ebay', 'value': '%5Esbf%3D%23%5E'})

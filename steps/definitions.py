@@ -17,6 +17,7 @@ def some_test_impl(context):
 
 @step('In search bar type "{name_of_search}"')
 def search_smth(context, name_of_search):
+    # search_inpt=context.browser.find_element_by_xpath("//input[@id='gh-ac']")
     search_inpt =WebDriverWait(context.browser,5).until(EC.visibility_of_element_located((By.XPATH,
     "//input[@id='gh-ac']" )), message='Search has not found')
 
@@ -138,6 +139,7 @@ def verifying_result(context,search):
 
 @step('"{link_name}" are displayed')
 def verify_all_categories(context,link_name):
+    # image_visible=context.browser.find_element_by_xpath(f"//h1[text()='{link_name}']")
     image_visible=WebDriverWait(context.browser,5).until(EC.presence_of_element_located((By.XPATH,f"//h1[text()='{link_name}']")),
     message='Search has not been found')
 
