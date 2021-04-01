@@ -115,7 +115,7 @@ def verifying_result(context,search):
      top_value = count_number + 1
 
      for page in range(2, top_value):
-         sleep(2)
+
          new_page = WebDriverWait(context.browser, 8).until(EC.element_to_be_clickable((By.XPATH,
          f"//a[@class='pagination__item' and text()='{page}']")), message='Search has not been found').click()
 
@@ -302,64 +302,64 @@ def all_items(context,name_of_link):
        raise ValueError(f'BUG: \n\n Not all results contain the word {name_of_link}!')
 
 
-@step('Verifying that all items are "{search}" related and contain Free {common_filter}')
-def let_us_find(context,search,common_filter):
-
-    result_items=WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
-    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
-    message = 'Search has not been found')
-
-    if not result_items:
-       raise ValueError(f'BUG:\n\n Not all {search} results found by xPath are on the page!')
-
-    result_items[0].click()
-
-    context.browser.back()
-
-    result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
-    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
-    message='Search has not been found')
-
-    mismatches = []
-
-    for each_item in result_items:
-        for word in search.split():
-            if word.lower() not in each_item.text.lower():
-                mismatches.append(each_item.text)
-                break
-
-    pages = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,"//a[@class='pagination__item']")),
-    message='Search has not been found')
-
-    count_number = len(pages)
-    print(count_number)
-    top_value = count_number + 1
-
-    for page in range(2, top_value):
-        try:
-            new_page = WebDriverWait(context.browser, 5).until(EC.presence_of_element_located((By.XPATH,
-            f"//a[@class='pagination__item' and text()='{page}']")), message='Search has not been found')
-
-            new_page.click()
-
-            try:
-                result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
-                f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
-                message='Search has not been found')
-                for each_item in result_items:
-                    for word in each_item.text:
-                        if word.lower() not in each_item.text.lower():
-                            mismatches.append(each_item.text)
-                            break
-            except:
-                raise ValueError(f'BUG:\n\n Not all {search}es found by xPaths are on the page!')
-
-        except:
-            print("No more pages available")
-
-    if mismatches:
-        print(mismatches)
-        raise ValueError(f'BUG: \n\n Some items do not contain the word {search}!')
+# @step('Verifying that all items are "{search}" related and contain Free {common_filter}')
+# def let_us_find(context,search,common_filter):
+#
+#     result_items=WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
+#     f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
+#     message = 'Search has not been found')
+#
+#     if not result_items:
+#        raise ValueError(f'BUG:\n\n Not all {search} results found by xPath are on the page!')
+#
+#     result_items[0].click()
+#
+#     context.browser.back()
+#
+#     result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
+#     f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
+#     message='Search has not been found')
+#
+#     mismatches = []
+#
+#     for each_item in result_items:
+#         for word in search.split():
+#             if word.lower() not in each_item.text.lower():
+#                 mismatches.append(each_item.text)
+#                 break
+#
+#     pages = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,"//a[@class='pagination__item']")),
+#     message='Search has not been found')
+#
+#     count_number = len(pages)
+#     print(count_number)
+#     top_value = count_number + 1
+#
+#     for page in range(2, top_value):
+#         try:
+#             new_page = WebDriverWait(context.browser, 5).until(EC.presence_of_element_located((By.XPATH,
+#             f"//a[@class='pagination__item' and text()='{page}']")), message='Search has not been found')
+#
+#             new_page.click()
+#
+#             try:
+#                 result_items = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
+#                 f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
+#                 message='Search has not been found')
+#                 for each_item in result_items:
+#                     for word in each_item.text:
+#                         if word.lower() not in each_item.text.lower():
+#                             mismatches.append(each_item.text)
+#                             break
+#             except:
+#                 raise ValueError(f'BUG:\n\n Not all {search}es found by xPaths are on the page!')
+#
+#         except:
+#             print("No more pages available")
+#
+#     if mismatches:
+#         print(mismatches)
+#         raise ValueError(f'BUG: \n\n Some items do not contain the word {search}!')
 
 
 @step('Click on {name_of_link}')
@@ -395,13 +395,37 @@ def size_filter(context,filter_group, filter_size):
 @step('From {color_group}, choose {color_choice}')
 def color_filter(context,color_group,color_choice):
     try:
-        desired_color = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
-        f"//input[@aria-label='{color_choice}']/parent::span")), message='Search has not been found')
+        desired_color = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
+        f"//span[@class='clipped' and text()='{color_choice}']/parent::a")), message='Search has not been found')
 
         desired_color.click()
 
     except:
-        see_all_located = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
+        see_all_located = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
+        f"//span[text()='see all']/parent::button[starts-with(@aria-label,'see all - {color_group} - opens dialog')]")),
+        message='Search has not been found')
+
+        see_all_located.click()
+
+        new_window_pops = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
+        f"//span[@class='clipped']/parent::span[text()='{color_choice}']")), message='Search has not been found')
+
+        new_window_pops.click()
+
+        button_push = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
+        "//span[@aria-hidden='true' and text()='Apply']")),message='Search has not been found').click()
+
+
+@step('We choose from {color_group}, {color_choice}')
+def color_filter(context,color_group,color_choice):
+    try:
+        desired_color = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
+        f"//span[@class='clipped']/parent::span[text()='{color_choice}']")), message='Search has not been found')
+
+        desired_color.click()
+
+    except:
+        see_all_located = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
         f"//span[text()='see all']/parent::button[starts-with(@aria-label,'see all - {color_group} - opens dialog')]")),
         message='Search has not been found')
 
@@ -418,7 +442,7 @@ def color_filter(context,color_group,color_choice):
 
 @step('In {group} choose {kind}')
 def choose_kind_in_group(context,group, kind):
-    desired_group_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
+    desired_group_visible = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
     f"//li[@class='x-refine__main__list '][.//h3[contains(text(),'{group}')]]//div[@role='button']")),
     message='Search has not been found')
 
@@ -426,7 +450,7 @@ def choose_kind_in_group(context,group, kind):
         desired_group_visible.click()
 
     try:
-        desired_checkbox = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
+        desired_checkbox = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
         f"//li[@class='x-refine__main__list '][.//h3[contains(text(),'{group}')]]//div[@class='x-refine__select__svg'][.//span[contains(text(),'{kind}')]]//input")),
         message='Search has not been found')
 
@@ -435,13 +459,13 @@ def choose_kind_in_group(context,group, kind):
         desired_checkbox.click()
 
     except:
-        see_all_located = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
+        see_all_located = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
         f"//span[text()='see all']/parent::button[starts-with(@aria-label,'see all - {group} - opens dialog')]")),
         message='Search has not been found')
 
         see_all_located.click()
 
-        new_window_pops = WebDriverWait(context.browser, 8).until(EC.presence_of_element_located((By.XPATH,
+        new_window_pops = WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
         f"//span[@class='clipped']/parent::span[text()='{kind}']")),
          message='Search has not been found')
 
@@ -573,6 +597,182 @@ def filters_from_table(context):
 
             button_push =WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.XPATH,
             "//span[@aria-hidden='true' and text()='Apply']")), message='Search has not been found').click()
+
+
+@step('Validating that all items have text "{search}", contain Free {common_filter} and satisfy the filters given below')
+def check_filters(context, search, common_filter):
+    for filter in context.table.rows:
+        header = filter['Filter']
+        checks_label = filter['value']
+        checks_text = filter['text']
+        clicks_size = filter['size']
+        checks_title = filter['title']
+        clicks_color = filter['color']
+    keys=(f"{header}",f"{checks_text}",f"{checks_title}")
+    values=(f"{checks_label}",f"{clicks_size}",f"{clicks_color}")
+
+    our_filter={}
+    for i in range(0,len(keys)):
+        our_filter[keys[i]]=values[i]
+    print(our_filter)
+    our_filters=frozenset(our_filter.values())
+    print(our_filters)
+
+    result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
+    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]")),message='Search has not been found')
+
+    current_window = context.browser.current_window_handle
+
+
+    item_n_title=[]
+    for item in result_items_visible:
+        link = item.find_element_by_xpath("descendant::a").get_attribute("href")
+        title = item.find_element_by_xpath("descendant::h3").text
+
+        item_specs=(link,title)
+
+        item_n_title.append(item_specs)
+
+    suspicious_items=[]
+    for link, title in item_n_title:
+        context.browser.execute_script(f'window.open("{link}", "_blank");')
+        sleep(2)
+
+        # switch
+        context.browser.switch_to.window(context.browser.window_handles[-1])
+
+        # validation
+
+        labels=context.browser.find_elements_by_xpath("//div[@class='itemAttr']//td[@class='attrLabels']")
+        # values=context.browser.find_elements_by_xpath("//div[@class='itemAttr']//td[@class='attrLabels']/following-sibling::td[.//*[text()]]")
+        # per_item_spec=dict(zip(labels, values))
+
+        specs_information= {}
+        for label in labels:
+
+          specs_information[label.text]=label.find_element_by_xpath("following-sibling::td[.//*[text()]]").text
+
+        specs_informations=frozenset(specs_information.values())
+        print(specs_informations)
+        if our_filters not in specs_informations:
+          suspicious_items.append(title)
+
+        # switch back and close
+        context.browser.close()
+        context.browser.switch_to.window(current_window)
+
+    result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
+    f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")),
+    message='Search has not been found')
+
+    if not result_items_visible:
+        raise ValueError(f'BUG:\n\n Not all {search} results found by xPath are on the page!')
+
+    mismatches = []
+
+    for each_item in result_items_visible:
+        for word in search.split():
+            if word.lower() not in each_item.text.lower():
+                mismatches.append(each_item.text)
+                break
+
+    # pages = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH, "//a[@class='pagination__item']")),
+    # message='Search has not been found')
+    #
+    # count_number = len(pages)
+    # print(count_number)
+    # top_value = count_number + 1
+
+    for page in range(2, 4):
+        try:
+            new_page = WebDriverWait(context.browser, 5).until(EC.presence_of_element_located((By.XPATH,
+            f"//a[@class='pagination__item' and text()='{page}']")), message='Search has not been found')
+
+            new_page.click()
+
+            result_items_visible = WebDriverWait(context.browser, 8).until(EC.presence_of_all_elements_located((By.XPATH,
+            f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]")), message='Search has not been found')
+
+            current_window = context.browser.current_window_handle
+
+            item_n_title = []
+            for item in result_items_visible:
+                link = item.find_element_by_xpath("descendant::a").get_attribute("href")
+                title = item.find_element_by_xpath("descendant::h3").text
+
+                item_specs = (link, title)
+
+                item_n_title.append(item_specs)
+
+            for link, title in item_n_title:
+                context.browser.execute_script(f'window.open("{link}", "_blank");')
+                sleep(2)
+
+                # switch
+                context.browser.switch_to.window(context.browser.window_handles[-1])
+
+                # validation
+
+                labels = context.browser.find_elements_by_xpath("//div[@class='itemAttr']//td[@class='attrLabels']")
+                # values=context.browser.find_elements_by_xpath("//div[@class='itemAttr']//td[@class='attrLabels']/following-sibling::td[.//*[text()]]")
+                # per_item_spec=dict(zip(labels, values))
+
+                specs_information = {}
+                for label in labels:
+                    specs_information[label.text] = label.find_element_by_xpath(
+                        "following-sibling::td[.//*[text()]]").text
+
+                specs_informations = frozenset(specs_information.values())
+                print(specs_informations)
+                if our_filters not in specs_informations:
+                    suspicious_items.append(title)
+
+                # switch back and close
+                context.browser.close()
+                context.browser.switch_to.window(current_window)
+
+
+            result_items_visible = WebDriverWait(context.browser, 5).until(EC.presence_of_all_elements_located((By.XPATH,
+            f"//div[@class='s-item__wrapper clearfix'][.//span[contains(text(),'{common_filter}')]]//h3")), message='Search has not been found')
+
+            if not result_items_visible:
+                raise ValueError(f'BUG:\n\n Not all {search}es found by xPaths are on the page!')
+
+            for each_item in result_items_visible:
+                for word in each_item.text:
+                    if word.lower() not in each_item.text.lower():
+                        mismatches.extend(each_item.text)
+                        break
+
+        except:
+            print("No more pages available")
+
+    if (mismatches and suspicious_items):
+       print(mismatches)
+       print(len(mismatches))
+       print(suspicious_items)
+       print(len(suspicious_items))
+       raise  ValueError(f"Some items do not contain the word:\n\t {search}!"
+                         f"\n\n Along with some items do not satisfy filter criteria: {our_filters}")
+
+    elif mismatches:
+       print(mismatches)
+       print(len(mismatches))
+       raise ValueError(f'BUG: \n\n Some items do not contain the word {search}!')
+
+    elif suspicious_items:
+       print(suspicious_items)
+       print(len(suspicious_items))
+       raise ValueError(f"Following items do not satisfy filter criteria : {our_filters}")
+
+
+
+
+
+
+
+
+
 
 
 

@@ -106,15 +106,15 @@ Feature: Regression testing for eBay.
     And Push button "Search"
     And Click on Women
     And Choose Size 8.5
-    And From Color, choose White
+    And We choose from Color, White
     And In Brand choose Not Specified
     Then Search results are "shoes" related
 
 
-    Scenario: Verifying that filters work: finding a pair of skechers for myself
+    Scenario Outline: Verifying that filters work: finding a pair of skechers
     Given Text as a variable
       """
-      Verifying that all items are "skechers" related, contain "Free shipping and are New with tags"
+      Verifying that all items are "skechers" related, contain "Free shipping" and satisfy the filters given below
 
       """
     And Open eBay.com
@@ -122,8 +122,17 @@ Feature: Regression testing for eBay.
     And Push button "Search"
     And Choose Size 9
     And In Condition choose New with tags
+    And From Color, choose White
     And In Shipping Options choose Free Shipping
-    And Verifying that all items are "skechers" related and contain Free shipping
+    Then Validating that all items have text "skechers", contain Free shipping and satisfy the filters given below
+
+      | Filter         |  value          | text          |  size           | title          | color          |
+      | <filter_name>  | <filter_value>  | <filter_text> | <filter_size>   | <filter_title> | <filter_color> |
+
+    Examples:
+      | filter_name    | filter_value   | filter_text  | filter_size | filter_title | filter_color |
+      | Condition     | New with box:   | Brand        | Skechers    | Color        | White        |
+
 
 
   Scenario: Verifying that capacity of "Search" combo box is 300.
