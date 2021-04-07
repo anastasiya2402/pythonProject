@@ -100,15 +100,36 @@ Feature: Regression testing for eBay.
 
     Then Search results are "<search_item>" related
 
-   Scenario: Verifying that filters work: finding a pair for myself
+   Scenario: Validating filters doing a man search of Nike shoes
     Given Open eBay.com
     And In search bar type "shoes"
     And Push button "Search"
+    And Choose Size 8.5
+    And From Color, choose Red
+    And In Brand choose Nike
+    And In Shipping Options choose Free Shipping
+    Then Validating the filters and the text "shoes" when the search contains Free shipping
+      | filter                  | value         |
+      | Brand                   | Nike          |
+      | US Shoe Size (Men's)    | 8.5           |
+      | Color                   | Red           |
+
+  Scenario: Working on filters doing a woman search of Nike shoes
+    Given Open eBay.com
+    And In search bar type "shoes"
+    And Push button "Search"
+    And In Brand choose Nike
     And Click on Women
     And Choose Size 8.5
-    And We choose from Color, White
-    And In Brand choose Not Specified
-    Then Search results are "shoes" related
+    And We choose from Color, Pink
+    And In Shipping Options choose Free Shipping
+    Then Validating the filters and the text "shoes" when the search contains Free shipping
+      | filter                      | value         |
+      | Brand                       | Nike          |
+      | US Shoe Size (Women's)      | 8.5           |
+      | Color                       | Pink          |
+      | Department                  | Women         |
+
 
 
     Scenario Outline: Verifying that filters work: finding a pair of skechers
@@ -121,18 +142,17 @@ Feature: Regression testing for eBay.
     And In search bar type "skechers"
     And Push button "Search"
     And Choose Size 9
-    And In Condition choose New with tags
+    And In Occasion choose Casual
     And From Color, choose White
     And In Shipping Options choose Free Shipping
     Then Validating that all items have text "skechers", contain Free shipping and satisfy the filters given below
 
-      | Filter         |  value          | text          |  size           | title          | color          |
-      | <filter_name>  | <filter_value>  | <filter_text> | <filter_size>   | <filter_title> | <filter_color> |
+      | Filter         |  value          | text          |  output         | title          | color          |
+      | <filter_name>  | <filter_value>  | <filter_text> | <filter_output> | <filter_title> | <filter_color> |
 
     Examples:
-      | filter_name    | filter_value   | filter_text  | filter_size | filter_title | filter_color |
-      | Condition     | New with box:   | Brand        | Skechers    | Color        | White        |
-
+      | filter_name    | filter_value   | filter_text            | filter_output | filter_title | filter_color |
+      | Occasion       | Casual         | US Shoe Size (Women's) | 9             | Color        | White        |
 
 
   Scenario: Verifying that capacity of "Search" combo box is 300.
@@ -359,6 +379,15 @@ Feature: Regression testing for eBay.
    Scenario: Click on Notification
     Given Open eBay.com
     And Click "Notification" header element
+
+    Scenario: Checking flyout menu
+    Given Open eBay.com
+    And Do actions with Home & Garden flyout menu Kitchen, Dining & Bar menu item
+
+   Scenario: Playing cards
+     Given Open website
+     And Drag and drop numbers to texts
+     Then Verify a pop-up message "You did it!"
 
 
 
